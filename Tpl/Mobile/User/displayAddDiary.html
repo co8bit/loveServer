@@ -1,0 +1,20 @@
+<layout name="User/userLayout"/>
+
+
+<div class="row demo-row">
+	<div class="col-md-12">
+		<dl class="palette palette-peter-river">
+       		<h3 class="demo-panel-title"><center>记录点滴</center></h3>
+      	 </dl>
+		<form class="form-signin" id="login" name="login" method="post" action="{:U('User/addDiary')}" >
+			<div class="login-form">
+				<div class="form-group">
+					<input class="form-control login-field" placeholder="记下我们之间的点点滴滴" id="pairUserName" name="content" type="text">
+					<label class="login-field-icon fui-new" for="login-name"></label>
+				</div>
+				<button class="btn btn-primary btn-lg btn-block" type="submit">发表</button>
+				<a class="btn btn-primary btn-lg btn-block" href="{:U('User/index')}">返回</a>
+			</div>
+		</form>
+	</div>
+</div>

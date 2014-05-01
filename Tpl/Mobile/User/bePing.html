@@ -1,0 +1,31 @@
+<layout name="User/userLayout" />
+
+<div class="container">
+	<div class="row demo-row">
+		<div class="col-md-12">
+			<dl class="palette palette-peter-river">
+        		<h3 class="demo-panel-title"><center>关联申请</center></h3>
+       	 	</dl>
+			
+			<form class="form-signin" id="login" name="login" method="post" action="{:U('User/verifyTempCon')}" >
+				<div class="login-form">
+					<b><font color="#000000"><center>关联申请处理</center></font></b>
+					<font color="#000000"><p>对方账户名：</font>
+					<div class="form-group">
+						<input class="form-control login-field" value={$pairUserName} disabled="disabled" id="pairUserName" name="pairUserName" type="text">
+						<label class="login-field-icon fui-user" for="login-name"></label>
+					</div>
+					
+					<font color="#000000">验证信息：</font>
+					<div class="form-group">
+						<input class="form-control login-field" value="{$remark}" disabled="disabled" placeholder="请输入验证信息" id="login-pass" type="text" name="remark">
+						<label class="login-field-icon fui-mail" for="login-pass"></label>
+					</div>
+					<button class="btn btn-primary btn-lg btn-block" type="submit">同意与对方关联</button>
+					<a class="btn btn-primary btn-lg btn-block" href="{:U('User/ignoreTempPair')}">忽视此申请</a>
+					<a class="login-link" href="#">对方需已在爱情银行开户</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div> <!-- /container -->

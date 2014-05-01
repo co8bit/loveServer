@@ -1,0 +1,41 @@
+<layout name="User/userLayout"/>
+
+<dl class="palette palette-wet-asphalt">
+ 	<h3 class="demo-panel-title"><center>消息中心</center></h3>
+ </dl>
+ <p>
+<volist name="list" id="vo" empty="您没有未处理的消息" mod="2">
+	<div class="row demo-row">
+		<div class="col-md-12">
+			<dl class={$vo.classStr}>
+        		<h3 class="demo-panel-title"><center>{$vo.messageTitle}</center></h3>
+        	</dl>
+			
+			<form class="form-signin" id="login" name="login" method="post" action="{:U('User/editMessage')}" >
+				<div class="login-form">
+					<input type="hidden" name="mId"  value={$vo.mId}>
+					<b><font color="#000000"><center>{$vo.messageTitle}</center></font></b>
+					<font color="#000000">金额：</font>
+					<div class="form-group">
+						<input class="form-control login-field" value="{$vo.money}"  id="pairUserName" name="money" type="text">
+						<label class="login-field-icon fui-user" for="login-name"></label>
+					</div>
+					<font color="#000000">理由：</font>
+					<div class="form-group">
+						<input class="form-control login-field" value="{$vo.remark}"  id="login-pass" type="text" name="remark">
+						<label class="login-field-icon fui-mail" for="login-pass"></label>
+					</div>
+					<button class="btn btn-primary btn-lg btn-block" type="submit">修改</button>
+					<a class="btn btn-primary btn-lg btn-block" href="__APP__/User/acceptMessage?id={$vo.mId}">确认</a>
+					<a class="login-link" href="#">对方确定账单后即生效</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</volist>
+<p>
+<div class="row demo-row">
+	<div class="col-md-12">
+		<a class="btn btn-info btn-lg btn-block" href="{:U('User/index')}">返回</a>
+	</div>
+</div>

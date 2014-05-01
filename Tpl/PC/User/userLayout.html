@@ -1,0 +1,73 @@
+<include file="Public:header" />
+
+<body>
+			  <!--    <dl class="palette palette-orange"> -->
+			
+	<div class="container">
+	
+		<div class="row demo-row">
+			<div class="col-md-12">
+			  <div class="navbar navbar-inverse">
+				<div class="navbar-header">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-collapse-01"></button>
+				</div>            
+				<div class="navbar-collapse collapse navbar-collapse-01">
+					<ul class="nav navbar-nav navbar-left">
+						<li>
+						  <a href="{:U('User/index')}">
+							{$Think.session._APPNAME}
+						  </a>
+						</li>
+						<li>
+							<a href="#fakelink">
+								对方心情：{$Think.session.moodValue}
+							</a>
+							<ul>
+								<li><a href="#fakelink">我的心情：{$Think.session.myMoodValue}</a></li>
+								<li>
+								  <a href="#fakelink">变更我的心情</a>
+								  <ul>
+									<li><a href="{:U('User/changeMood?mood=幸福')}">幸福</a></li>
+									<li><a href="{:U('User/changeMood?mood=开心')}">开心</a></li>
+									<li><a href="{:U('User/changeMood?mood=郁闷')}">郁闷</a></li>
+									<li><a href="{:U('User/changeMood?mood=难过')}">难过</a></li>
+									<li><a href="{:U('User/changeMood?mood=生气')}">生气</a></li>
+								  </ul> <!-- /Sub menu -->
+								</li>
+							</ul> <!-- /Sub menu -->
+						</li>
+						<li>
+						  <a href="{:U('User/friend')}">
+							好友圈
+							<span class="navbar-unread">1</span>
+						  </a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+						  <a href="{:U('User/displayAddDiary')}">
+							写点滴
+						  </a>
+						</li>
+						<li class="active">
+							<a href="{:U('User/account')}">
+								{$Think.session.userName}
+							</a>
+							<ul>
+								<li><a href="{:U('User/account')}">账户设置</a></li>
+								<li><a href="{:U('Index/logout')}">退出</a></li>
+							</ul> <!-- /Sub menu -->
+						</li>
+					</ul>
+				</div><!--/.nav -->
+			  </div>
+			</div>
+		</div>
+
+		    {__CONTENT__}
+		
+	</div> <!-- /container -->
+
+	<!-- </dl> -->
+	
+<include file="Public:footer" />

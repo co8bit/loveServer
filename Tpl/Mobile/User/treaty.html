@@ -1,0 +1,70 @@
+<layout name="User/userLayout"/>
+
+<form class="form-signin" id="selectTreaty" name="selectTreaty" method="post" action="{:U('User/selectTreaty')}" >
+	<div class="row demo-row">
+		<dl class="palette palette-peter-river">
+        	<h3 class="demo-panel-title"><center>条约</center></h3>
+        </dl>
+		
+		
+		<h3 class="demo-panel-title">选择条约</h3>
+		<div class="col-md-6">
+			<volist name="list" id="vo" empty="没有数据" mod="2">
+				<eq name="mod" value="0"> <!-- 0是奇数 -->
+					<label class="checkbox checked" for="checkbox2">
+						<span class="icons"><span class="first-icon fui-checkbox-unchecked"></span><span class="second-icon fui-checkbox-checked"></span></span>
+						<input checked="checked" value="{$i-1}" name = "select[]" id="checkbox2" data-toggle="checkbox" type="checkbox">
+						{$vo}
+					</label>
+				</eq>
+			</volist>
+		</div>
+		<div class="col-md-6">
+			<volist name="list" id="vo" mod="2">
+				<eq name="mod" value="1">
+					<label class="checkbox checked" for="checkbox2">
+						<span class="icons"><span class="first-icon fui-checkbox-unchecked"></span><span class="second-icon fui-checkbox-checked"></span></span>
+						<input checked="checked" value="{$i-1}" name = "select[]" id="checkbox2" data-toggle="checkbox" type="checkbox">
+						{$vo}
+					</label>
+				</eq>
+			</volist>
+		</div>
+	</div>
+	<div class="row demo-row">
+		<div class="col-md-2">
+		</div>
+		<div class="col-md-8">
+			<button class="btn btn-info btn-lg btn-block" type="submit">确认</button>
+		</div>
+	</div>
+</form>
+<div class="row demo-row">
+	<form class="form-signin" id="newPost" name="newPost" method="post" action="{:U('User/newTreaty')}" >
+		<div class="row demo-row">
+			<h3 class="demo-panel-title">&nbsp&nbsp&nbsp添加条约</h3>
+			<div class="col-md-7">
+				第一步，请输入条款：
+				<div class="form-group">
+					<input class="form-control login-field" id="login-id" placeholder="例如：一起去自习室" name="content" type="text">
+				</div>
+			</div>
+			<div class="col-md-3">
+				第二步，奖惩爱情币：
+				<div class="form-group">
+					<input class="form-control login-field" id="login-id" placeholder="例如：5" name="score" type="text">
+				</div>
+			</div>
+			<div class="col-md-2">
+				第三步
+				<div class="form-group">
+					<button class="btn btn-info btn-lg btn-block" type="submit">添加</button>
+				</div>
+			</div>
+			<a class="login-link" href="#">说明：“奖惩爱情币”一栏只需输入数字即可。如若没做到则扣除相应数量的爱情币，如若做到则会有相应数量的爱情币进账。</a>
+		</div>
+		<div class="col-md-12">
+			<a class="btn btn-primary btn-lg btn-block" href="{:U('User/index')}">返回</a>
+		</div>
+	</form>
+</div>

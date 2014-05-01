@@ -1,0 +1,59 @@
+<layout name="User/userLayout" />
+
+<div class="row demo-row">
+	<div class="col-md-6">
+		<a href="{:U('User/add')}" class="btn btn-block btn-lg btn-info">加分订单</a>
+	</div>
+	<div class="col-md-6">
+		<a href="{:U('User/sub')}" class="btn btn-block btn-lg btn-inverse">减分订单</a>
+	</div>
+</div> <!-- /row -->
+	
+	
+<div class="demo-headline">
+	<h1 class="demo-logo">
+		<div class="logo"></div>
+		{$View_money}
+		<small>{$View_currency}</small>
+		<small>{$View_target}</small>
+	</h1>
+</div> <!-- /demo-headline -->
+
+<div class="row demo-tiles">
+	<div class="col-md-3">
+		<div class="tile">
+			<a href="{:U('User/message')}">
+				<img src="__PUBLIC__/FlatUI/images/icons/svg/chat.svg" alt="Chat" class="tile-image">
+			</a>
+			<h3 class="tile-title">新消息</h3>
+			<p>您有<b>{$View_messageCount}</b>条未处理的消息</p>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="tile">
+			<a href="{:U('User/note')}">
+				<img src="__PUBLIC__/FlatUI/images/icons/svg/clocks.svg" alt="Chat" class="tile-image">
+			</a>
+			<h3 class="tile-title">重要提醒</h3>
+			<p>您今天有{$View_noteCount}项待处理事宜</p>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="tile">
+			<a href="{:U('User/treaty')}">
+				<img src="__PUBLIC__/FlatUI/images/icons/svg/clipboard.svg" alt="Chat" class="tile-image">
+			</a>
+			<h3 class="tile-title">爱情条约</h3>
+			<p>共有条约{$View_lowCount}条</p>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="tile">
+			<a href="{:U('User/diary')}">
+				<img src="__PUBLIC__/FlatUI/images/icons/svg/book.svg" alt="Chat" class="tile-image">
+			</a>
+			<h3 class="tile-title">爱情账户明细</h3>
+			<p>共有点滴{$View_diaryCount}条</p>
+		</div>
+	</div>
+</div>

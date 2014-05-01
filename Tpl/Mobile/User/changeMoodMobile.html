@@ -1,0 +1,54 @@
+<layout name="User/userLayout"/>
+
+<form class="form-signin" id="selectTreaty" name="selectTreaty" method="post" action="{:U('User/toChangeMoodMobile')}" >
+	<div class="row demo-row">
+		<dl class="palette palette-peter-river">
+        	<h3 class="demo-panel-title"><center>改变心情</center></h3>
+        </dl>
+        <div class="col-md-12">
+        	我的心情：{$Think.session.myMoodValue}
+			<label class="radio">
+    				<span class="icons">
+    					<span class="first-icon fui-radio-unchecked"></span>
+    					<span class="second-icon fui-radio-checked"></span>
+    				</span>
+    				<input id="optionsRadios1" value="幸福" name = "radio" data-toggle="radio" type="radio">
+     			幸福
+   			</label>
+   			<label class="radio">
+    				<span class="icons">
+    					<span class="first-icon fui-radio-unchecked"></span>
+    					<span class="second-icon fui-radio-checked"></span>
+    				</span>
+    				<input id="optionsRadios1" value="开心" name = "radio" data-toggle="radio" type="radio">
+     			开心
+   			</label>
+   			<label class="radio">
+    				<span class="icons">
+    					<span class="first-icon fui-radio-unchecked"></span>
+    					<span class="second-icon fui-radio-checked"></span>
+    				</span>
+    				<input id="optionsRadios1" value="郁闷" name = "radio" data-toggle="radio" type="radio">
+     			郁闷
+   			</label>
+   			<label class="radio">
+    				<span class="icons">
+    					<span class="first-icon fui-radio-unchecked"></span>
+    					<span class="second-icon fui-radio-checked"></span>
+    				</span>
+    				<input id="optionsRadios1" value="难过" name = "radio" data-toggle="radio" type="radio">
+     			难过
+   			</label>
+   			<label class="radio">
+    				<span class="icons">
+    					<span class="first-icon fui-radio-unchecked"></span>
+    					<span class="second-icon fui-radio-checked"></span>
+    				</span>
+    				<input id="optionsRadios1" value="生气" name = "radio" data-toggle="radio" type="radio">
+     			生气
+   			</label>
+			<button class="btn btn-info btn-lg btn-block" type="submit">确认</button>
+			<a class="btn btn-primary btn-lg btn-block" href="{:U('User/index')}">返回</a>
+		</div>
+	</div>
+</form>

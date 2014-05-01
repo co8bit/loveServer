@@ -1,0 +1,99 @@
+<layout name="User/userLayout"/>
+
+<form class="form-signin" id="selectTreaty" name="selectTreaty" method="post" action="{:U('User/doneNote')}" >
+	<div class="row demo-row">
+		<dl class="palette palette-peter-river">
+        	<h3 class="demo-panel-title"><center>TODO LIST</center></h3>
+        </dl>
+		<div class="col-md-6">
+			<volist name="list" id="vo" empty="没有数据" mod="2">
+				<eq name="mod" value="0"> <!-- 0是奇数 -->
+					<label class="checkbox" for="checkbox1">
+            			<span class="icons"><span class="first-icon fui-checkbox-unchecked"></span><span class="second-icon fui-checkbox-checked"></span></span>
+            			<input value="{$i-1}" name = "select[]" id="checkbox1" data-toggle="checkbox" type="checkbox">
+            			{$vo}
+          			</label>
+				</eq>
+			</volist>
+		</div>
+		<div class="col-md-6">
+			<volist name="list" id="vo" mod="2">
+				<eq name="mod" value="1">
+					<label class="checkbox" for="checkbox1">
+            			<span class="icons"><span class="first-icon fui-checkbox-unchecked"></span><span class="second-icon fui-checkbox-checked"></span></span>
+            			<input value="{$i-1}" name = "select[]" id="checkbox1" data-toggle="checkbox" type="checkbox">
+            			{$vo}
+          			</label>
+				</eq>
+			</volist>
+		</div>
+	</div>
+	<div class="row demo-row">
+		<div class="col-md-2">
+		</div>
+		<div class="col-md-8">
+			<button class="btn btn-info btn-lg btn-block" type="submit">已经完成</button>
+		</div>
+	</div>
+</form>
+
+<div class="row demo-row">
+	<form class="form-signin" id="selectTreaty" name="selectTreaty" method="post" action="{:U('User/addNoteBySelect')}" >
+		<h2><center>添加提醒</center></h2>
+		<h3 class="demo-panel-title">快速添加</h3>
+		<div class="col-md-6">
+			<volist name="list2" id="vo" empty="没有数据" mod="2">
+				<eq name="mod" value="0"> <!-- 0是奇数 -->
+					<label class="radio">
+           				<span class="icons">
+           					<span class="first-icon fui-radio-unchecked"></span>
+           					<span class="second-icon fui-radio-checked"></span>
+           				</span>
+           				<input id="optionsRadios1" value="{$i-1}" name = "radio" data-toggle="radio" type="radio">
+            			{$vo}
+          			</label>
+				</eq>
+			</volist>
+		</div>
+		<div class="col-md-6">
+			<volist name="list2" id="vo" mod="2">
+				<eq name="mod" value="1">
+					<label class="radio">
+           				<span class="icons">
+           					<span class="first-icon fui-radio-unchecked"></span>
+           					<span class="second-icon fui-radio-checked"></span>
+           				</span>
+           				<input id="optionsRadios1" value="{$i-1}" name = "radio" data-toggle="radio" type="radio">
+            			{$vo}
+          			</label>
+				</eq>
+			</volist>
+		</div>
+		<div class="row demo-row">
+			<div class="col-md-2">
+			</div>
+			<div class="col-md-8">
+				<button class="btn btn-info btn-lg btn-block" type="submit">确认</button>
+			</div>
+		</div>
+</div>
+<div class="row demo-row">
+	</form>
+	<form class="form-signin" id="newPost" name="newPost" method="post" action="{:U('User/addNote')}" >
+		<h3 class="demo-panel-title">或者添加自定义提醒</h3>
+		<div class="col-md-10">
+			1.请输入提醒内容：
+			<div class="form-group">
+				<input class="form-control login-field" id="login-id" placeholder="例如：7点钟打电话" name="content" type="text">
+			</div>
+		</div>
+		<div class="col-md-2">
+			2.提交
+			<div class="form-group">
+				<button class="btn btn-info btn-lg btn-block" type="submit">添加</button>
+			</div>
+		</div>
+		<a class="login-link" href="#">说明：提醒只有自己能看到。</a>
+		<a class="btn btn-primary btn-lg btn-block" href="{:U('User/index')}">返回</a>
+	</form>
+</div>

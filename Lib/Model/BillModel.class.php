@@ -147,7 +147,11 @@ class BillModel extends Model {
 		$info = NULL;
 		$info = $this->where("billId=".$billId)->select();
 		
-		return $dbUser->updateMoney($info[0]["isAdd"],$info[0]["sMoney"]);
+		if ($info[0]["toUser"] === $this->nowUserId)
+			$temp = $dbUser->updateMoney($info[0]["isAdd"],$info[0]["sMoney"]);
+		else
+			$temp = $dbPairUser->updateMoney($info[0]["isAdd"],$info[0]["sMoney"]);
+		return $temp;
 	}
 	
 	public function getBillInfo($billIdList)//从一个一维数组中获取billId，然后返回billId的详细信息

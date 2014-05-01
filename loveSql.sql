@@ -64,15 +64,19 @@ UPDATE `low` SET `content` = '一起去自习@#$%^&*&^%$#@!$(&&$%^一起去吃�
 create table bill(
 	billId bigint NOT NULL AUTO_INCREMENT,
 	remark LONGTEXT,
-	money int,
 	isAdd boolean,
 	billTime datetime,
 	
 	userStartID int NOT NULL,/*发起人ID*/
-	up1Msg LONGTEXT NOT NULL,/*上一条remark*/
-	upUser int NOT NULL,/*上一个用户（即上一条remark是谁的）*/
-	toUser1 int NOT NULL,/*目标用户1ID*/
-	toUser2 int NOT NULL,/*目标用户2ID*/
+	sMsg LONGTEXT not NULL,
+	eMsg LONGTEXT not NULL,
+	sMoney bigint not NULL,
+	eMoney bigint not NULL,
+	sTime datetime not NULL,
+	eTime datetime not NULL,
+	toUser bigint,
+	primary key(billId)
+	
 	/*
 	 ALTER TABLE `bill` ADD `userStartID` int NOT NULL ;
 	  ALTER TABLE `bill` ADD `up1Msg` LONGTEXT NOT NULL ;
@@ -80,7 +84,6 @@ create table bill(
 	 ALTER TABLE `bill` ADD `toUser1` int NOT NULL ;
 	 ALTER TABLE `bill` ADD `toUser2` int NOT NULL ;
 	 */
-	primary key(billId)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 create table diary(

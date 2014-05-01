@@ -21,26 +21,27 @@ create table user(
 	tempBillContent LONGTEXT NOT NULL,/*存着还没有确认的账单数据，如billId.分隔符.billId……*/
 	moodValue varchar(100),/*这里存的是对方的心情*/
 	note LONGTEXT NOT NULL,
+	
+	money bigint NOT NULL,
 	primary key(userId)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
-insert user values(NULL,"wbx","wbx","11111111",1,2,"","未设置","");
-insert user values(NULL,"lxz","lxz","11111111",1,1,"","未设置","");
-insert user(userName,userPassword,userPower,tempBillContent,moodValue) values("ldm","ldm","00000000","","未设置");
-insert user(userName,userPassword,userPower,tempBillContent,moodValue) values("djm","djm","00000000","","未设置");
+insert user values(NULL,"wbx","wbx","11111111",1,2,"","未设置","",0);
+insert user values(NULL,"lxz","lxz","11111111",1,1,"","未设置","",0);
+insert user values(NULL,"ldm","ldm","00000000","","","","未设置","",0);
+insert user values(NULL,"djm","djm","00000000","","","","未设置","",0);
 
 create table pair(
 	pairId bigint NOT NULL AUTO_INCREMENT,
 	user1Id bigint NOT NULL,
 	user2Id bigint NOT NULL,
 	pairDate datetime,
-	money bigint,
 	lowId bigint,
 	billContent LONGTEXT NOT NULL,/*存着已经生效的账单数据,如billId.分隔符.billId……*/
 	diaryIdList LONGTEXT NOT NULL,
 	targetId  bigint,
 	primary key(pairId)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
-insert pair values(NULL,1,2,"2013-12-18 00:00:00",100,1,"","",0);/*lowId在创建的时候需要在low里插入一个新的记录，内容是拷贝lowId=1的内容*/
+insert pair values(NULL,1,2,"2013-12-18 00:00:00",1,"","",0);/*lowId在创建的时候需要在low里插入一个新的记录，内容是拷贝lowId=1的内容*/
 
 create table temppair(
 	tempPairId bigint NOT NULL AUTO_INCREMENT,
@@ -76,14 +77,6 @@ create table bill(
 	eTime datetime not NULL,
 	toUser bigint,
 	primary key(billId)
-	
-	/*
-	 ALTER TABLE `bill` ADD `userStartID` int NOT NULL ;
-	  ALTER TABLE `bill` ADD `up1Msg` LONGTEXT NOT NULL ;
-	 ALTER TABLE `bill` ADD `upUser` int NOT NULL ;
-	 ALTER TABLE `bill` ADD `toUser1` int NOT NULL ;
-	 ALTER TABLE `bill` ADD `toUser2` int NOT NULL ;
-	 */
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 create table diary(

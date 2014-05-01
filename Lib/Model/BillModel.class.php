@@ -46,40 +46,27 @@ class BillModel extends Model {
 	}
 	
 	public function insertTempBill()//插入一个临时账单
-	//TODO:public function insertTempBill($remark = NULL,$money = NULL)//插入一个临时账单
 	{
 		//准备数据
-		if ($remark === NULL)
-		{
+		$tmpData = $_GET ;
 // 			$this->create();
 // 			$tmpData = $this->data;
 //不知道为什么$this->create()建立不了get的数据
 
-			$tmpData = $_GET ;
-
-			$data = NULL;
-			$data["isAdd"] = $this->isAdd;
-			$data["remark"] = $tmpData["remark"];
-			$data["money"] = $tmpData["money"];
-			
-			//新增信息
-			$data["userStartID"] =$this->nowUserId;
-			$data["up1Msg"] = "";
-			$data["upUser"] =$data["userStartID"];
-			$data["toUser1"] = $tmpData["toUser1"] ;
-			$data["toUser2"] =$tmpData["toUser2"]  ;
-			$billId = $this->add($data);
-		}
-		else
-		{
-			/*
-			$data = NULL;
-			$data["remark"] = $remark;
-			$data["money"] = $money;
-			$data["isAdd"] = $this->isAdd;
-			$billId = $this->add($data);
-			*/
-		}
+		$data = NULL;
+		$data["isAdd"] = $this->isAdd;
+		$data["remark"] = $tmpData["remark"];
+		
+		//新增信息
+		$data["userStartID"] =$this->nowUserId;
+		$data["sMsg"] = "";
+		$data["eMsg"] = "";
+		$data["sMoney"] = $tmpData["money"];
+		$data["eMoney"] = "";
+		$data["sTime"] = date("Y-m-d H:i:s");
+		$data["eTime"] = "";
+		$data["toUser"] = $tmpData["toUser"];
+		$billId = $this->add($data);
 		
 		/*
 		 * 更新账户billContent
@@ -104,12 +91,19 @@ class BillModel extends Model {
 		
 		//更新bill表
 		$data["billId"] = $billId;
-		$data["up1Msg"] =  $_GET["up1Msg"] ;
-		$data["remark"] = $_GET["remark"];
-		$data["money"] = $_GET["money"];
-		$data["upUser"] =$_GET["upUser"];
-		$data["toUser1"] = $_GET["toUser1"];
-		$data["toUser2"] =$_GET["toUser2"];
+		$data["sMsg"] =  $_GET["sMsg"] ;
+		$data["eMsg"] = $_GET["eMsg"];
+		$data["sMoney"] = $_GET["sMoney"];
+		$data["eMoney"] = $_GET["eMoney"];
+		if ($_GET["isStart"] == 0)
+		{
+			$data["eTime"] = date("Y-m-d H:i:s");
+		}
+		else
+		{
+			$data["sTime"] = date("Y-m-d H:i:s");
+		}
+		
 		$re = $this->save($data);
 		if ( ($re === false) || ($re === null) )
 			return false;
@@ -128,14 +122,10 @@ class BillModel extends Model {
 	
 	public function acceptTempBill($billId,$pairId)//接收订单
 	{
-		//找到billId的详细信息
-		$info = NULL;
-		$info = $this->where("billId=".$billId)->select();
-		
 		//更新pair中的确认账单信息
 		$dbPair = D("Pair");
 		$dbPair->init($pairId);
-		$dbPair->updateBillArray($info[0]["isAdd"],$billId,$info[0]["money"]);
+		$dbPair->updateBillArray($billId);
 		
 		/*
 		 * 从user的tempBillContent中删除billId
@@ -148,7 +138,16 @@ class BillModel extends Model {
 		//删除别人的
 		$dbPairUser = new UserModel();//因为D方法在已经存在模型类的时候不创建一个新的，所以要用new
 		$dbPairUser->init($this->pairUserId);
-		return $dbPairUser->deleteOneBillInContent($billId);
+		$dbPairUser->deleteOneBillInContent($billId);
+		
+		/*
+		 * 更新目标用户的金钱
+		 */
+		//找到billId的详细信息
+		$info = NULL;
+		$info = $this->where("billId=".$billId)->select();
+		
+		return $dbUser->updateMoney($info[0]["isAdd"],$info[0]["sMoney"]);
 	}
 	
 	public function getBillInfo($billIdList)//从一个一维数组中获取billId，然后返回billId的详细信息

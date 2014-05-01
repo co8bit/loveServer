@@ -102,7 +102,10 @@ class UserModel extends Model {
 		return $this->billContent;
 	}
 	
-	public function updateUserBillContent($billId)//给用户插入一条账单,传入参数：billId
+	/**
+	 * 给用户插入一条账单,传入参数：billId
+	 */
+	public function updateUserBillContent($billId)
 	{
 		$this->getOriginBillContent();
 	
@@ -239,6 +242,23 @@ class UserModel extends Model {
 	public function regroupNote($tmp,$count)
 	{
 		return $this->updateNote($tmp,$count);
+	}
+	
+	/**
+	 * 更新账户的金钱
+	 */
+	public function updateMoney($isAdd,$changeMoney)
+	{
+		$con["userId"] = $this->userId;		
+		if ($isAdd == 1)
+		{
+			$re = $this->where($con)->setInc('money',$changeMoney); 
+		}
+		else
+		{
+			$re = $this->where($con)->setDec('money',$changeMoney);
+		}
+		return $re;
 	}
 	
 	/*

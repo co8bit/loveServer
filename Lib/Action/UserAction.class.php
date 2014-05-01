@@ -235,96 +235,6 @@ class UserAction extends CommonAction
 		}
 	}
 	
-	public function add()
-	{
-		$this->assign("_ADD_REMARK",_ADD_REMARK);
-		$this->treaty();
-	}
-	
-	public function toAddBySelect()//与toSub对称
-	{
-		//取出条约
-		$data = NULL;
-		$dbLow = D("Low");
-		$dbLow->init(session("pairId"));
-		$list = $dbLow->getContentAndScore();
-		
-		$radio = $this->_post("radio");
-		$data = $list[$radio];
-
-		//更新条约
-		$dbBill = D("Bill");
-		$dbBill->init(session("userId"),session("pairUserId"),true);
-		$this->isOk(-1,$dbBill->insertTempBill($data["content"],$data["score"]),"转账申请成功，等待对方确认","User/index","转账错误，请重试","User/add");
-	}
-	
-	public function toAdd()//与toSub对称
-	{
-		$dbUser = D("User");
-		$dbBill = D("Bill");
-		if (isset($_GET["userName"]))
-		{
-			$re = $dbUser->login($this->_get("userName"),$this->_get("userPassword"));
-			if ( ($re == false) || ($re == null) )
-			{
-				echo "错误的登录";
-				return false;
-			}
-			$dbBill->init($re["userId"],$re["pairUserId"],true);
-		}
-		else
-		{
-			$dbBill->init(session("userId"),session("pairUserId"),true);
-		}
-// 		$dbBill->insertTempBill();
-		$this->isOk(-1,$dbBill->insertTempBill(),"转账申请成功，等待对方确认","User/index","转账错误，请重试","User/add");
-	}
-	
-	public function sub()
-	{
-		$this->assign("_SUB_REMARK",_SUB_REMARK);
-		$this->treaty();
-	}
-	
-	public function toSub()//与toAdd对称
-	{
-		$dbUser = D("User");
-		$dbBill = D("Bill");
-		if (isset($_GET["userName"]))
-		{
-			$re = $dbUser->login($this->_get("userName"),$this->_get("userPassword"));
-			if ( ($re == false) || ($re == null) )
-			{
-				echo "错误的登录";
-				return false;
-			}
-			$dbBill->init($re["userId"],$re["pairUserId"],false);
-		}
-		else
-		{
-			$dbBill->init(session("userId"),session("pairUserId"),false);
-		}
-		
-		$this->isOk(-1,$dbBill->insertTempBill(),"扣除申请成功，等待对方确认","User/index","转账错误，请重试","User/sub");
-	}
-	
-	public function toSubBySelect()//与toAdd对称
-	{
-		//取出条约
-		$data = NULL;
-		$dbLow = D("Low");
-		$dbLow->init(session("pairId"));
-		$list = $dbLow->getContentAndScore();
-	
-		$radio = $this->_post("radio");
-		$data = $list[$radio];
-	
-		//更新条约
-		$dbBill = D("Bill");
-		$dbBill->init(session("userId"),session("pairUserId"),false);
-		$this->isOk(-1,$dbBill->insertTempBill($data["content"],$data["score"]),"转账申请成功，等待对方确认","User/index","转账错误，请重试","User/add");
-	}
-	
 	public function friend()
 	{
 		$this->display();
@@ -501,139 +411,6 @@ class UserAction extends CommonAction
 		}
 	}
 	
-	public function message()//新消息
-	{
-		$dbUser = D("User");
-		if (isset($_GET["userName"]))
-		{
-			$re = $dbUser->login($this->_get("userName"),$this->_get("userPassword"));
-			if ( ($re == false) || ($re == null) )
-			{
-				echo "错误的登录";
-				return false;
-			}
-			$dbUser->init($re["userId"]);
-			$billIdList = $dbUser->getBillContent();
-			
-			$dbBill = D("Bill");
-			$data = $dbBill->getBillInfo($billIdList);
-			
-			$count = count($data);
-			for ($i = 0; $i < $count; $i++)
-			{
-				if ($data[$i]["isAdd"] == true)
-				{
-					$output[$i]["isAdd"] = "1";
-					$output[$i]["money"] = $data[$i]["money"];
-				}
-				else
-				{
-					$output[$i]["isAdd"] = "0";
-					$output[$i]["money"] = (0 - $data[$i]["money"]);
-				}
-				$output[$i]["remark"] = $data[$i]["remark"];
-				$output[$i]["mId"] = $data[$i]["billId"];
-				$output[$i]["userStartID"] = $data[$i]["userStartID"];
-				$output[$i]["up1Msg"] = $data[$i]["up1Msg"];
-				$output[$i]["up2Msg"] = $data[$i]["up2Msg"];
-				$output[$i]["upUser"] = $data[$i]["upUser"];
-				$output[$i]["toUser1"] = $data[$i]["toUser1"];
-				$output[$i]["toUser2"] = $data[$i]["toUser2"];
-			}
-		}
-		else
-		{
-			$dbUser->init(session("userId"));
-			$billIdList = $dbUser->getBillContent();
-				
-			$dbBill = D("Bill");
-			$data = $dbBill->getBillInfo($billIdList);
-				
-			$count = count($data);
-			for ($i = 0; $i < $count; $i++)
-			{
-			if ($data[$i]["isAdd"] == true)
-			{
-				$output[$i]["messageTitle"] = "加分订单";
-				$output[$i]["messageTitlePic"] = "chat";
-				$output[$i]["money"] = $data[$i]["money"];
-				$output[$i]["classStr"] = "\"palette palette-peter-river\"";
-			}
-			else
-			{
-				$output[$i]["messageTitle"] = "减分订单";
-				$output[$i]["messageTitlePic"] = "mail";
-				$output[$i]["money"] = $data[$i]["money"];
-				$output[$i]["classStr"] = "\"palette palette-alizarin\"";
-			}
-				$output[$i]["remark"] = $data[$i]["remark"];
-				$output[$i]["mId"] = $data[$i]["billId"];
-			}
-		}
-		
-		
-		
-		if (isset($_GET["userName"]))
-		{
-			header("Content-type: text/html; charset=utf-8");
-// 			dump($output);
-			echo xuLieHua_2($output);
-		}
-		else
-		{
-			$this->assign("list",$output);
-			$this->display();
-		}
-		
-	}
-	
-	public function editMessage()
-	{
-		$dbUser = D("User");
-		$dbBill = D("Bill");
-		if (isset($_GET["userName"]))
-		{
-			$re = $dbUser->login($this->_get("userName"),$this->_get("userPassword"));
-			if ( ($re == false) || ($re == null) )
-			{
-				echo "错误的登录";
-				return false;
-			}
-			$dbBill->init($re["userId"],$re["pairUserId"]);
-		}
-		else
-		{
-			$dbBill->init(session("userId"),session("pairUserId"));
-		}
-		
-// 		$dbBill->editTempBill($this->_param("mId"));
-		$this->isOk(-1,$dbBill->editTempBill($this->_param("mId")),"修改成功","User/message","修改错误，请重试","User/message");
-	}
-	
-	public function acceptMessage()
-	{
-		$dbUser = D("User");
-		$dbBill = D("Bill");
-		if (isset($_GET["userName"]))
-		{
-			$re = $dbUser->login($this->_get("userName"),$this->_get("userPassword"));
-			if ( ($re == false) || ($re == null) )
-			{
-				echo "错误的登录";
-				return false;
-			}
-			$dbBill->init($re["userId"],$re["pairUserId"]);
-			$pairId = $re["pairId"];
-		}
-		else
-		{
-			$pairId = session("pairId");
-			$dbBill->init(session("userId"),session("pairUserId"));
-		}
-		
-		//$dbBill->acceptTempBill($this->_param("id"),$pairId);
-		$this->isOk(-1,$dbBill->acceptTempBill($this->_param("id"),$pairId),"确认成功","User/message","确认错误，请重试","User/message");
-	}
 	
 	public function note()//重要提醒
 	{
@@ -1003,5 +780,103 @@ class UserAction extends CommonAction
 		$dbPair = D("Pair");
 		$dbPair->init(session("pairId"));
 		$this->isOk(-1,$dbPair->insertTarget($dbTarget->add()),"目标设置成功","User/index","目标设置失败，请重试","User/target");
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	/**
+	 * 显示新消息
+	 */
+	public function message()
+	{
+		$dbUser = D("User");
+		$dbUser->init($this->userID);
+		$billIdList = $dbUser->getBillContent();
+		
+		$dbBill = D("Bill");
+		$data = $dbBill->getBillInfo($billIdList);
+	
+		$count = count($data);
+		for ($i = 0; $i < $count; $i++)
+		{
+			if ($data[$i]["isAdd"] == true)
+			{
+				$output[$i]["isAdd"] = "1";
+			}
+			else
+			{
+				$output[$i]["isAdd"] = "0";
+			}
+			$output[$i]["remark"] = $data[$i]["remark"];
+			$output[$i]["mId"] = $data[$i]["billId"];
+			$output[$i]["userStartID"] = $data[$i]["userStartID"];
+			$output[$i]["sMsg"] = $data[$i]["sMsg"];
+			$output[$i]["eMsg"] = $data[$i]["eMsg"];
+			$output[$i]["sMoney"] = $data[$i]["sMoney"];
+			$output[$i]["eMoney"] = $data[$i]["eMoney"];
+			$output[$i]["sTime"] = $data[$i]["sTime"];
+			$output[$i]["eTime"] = $data[$i]["eTime"];
+			$output[$i]["toUser"] = $data[$i]["toUser"];
+		}
+	
+		header("Content-type: text/html; charset=utf-8");
+// 		dump($output);
+		echo xuLieHua_2($output);
+	}
+
+	
+	
+	public function toAdd()//与toSub对称
+	{
+		$dbBill = D("Bill");
+		$dbBill->init($this->userID,$this->pairUserID,true);
+		
+		// 		$dbBill->insertTempBill();
+		$this->isOk(-1,$dbBill->insertTempBill(),"转账申请成功，等待对方确认","User/index","转账错误，请重试","User/add");
+	}
+	
+	
+	
+	public function toSub()//与toAdd对称
+	{
+		$dbBill = D("Bill");
+		$dbBill->init($this->userID,$this->pairUserID,false);
+	
+		$this->isOk(-1,$dbBill->insertTempBill(),"扣除申请成功，等待对方确认","User/index","转账错误，请重试","User/sub");
+	}
+	
+	
+	/**
+	 * 修改订单页面
+	 */
+	public function editMessage()
+	{
+		$dbBill = D("Bill");
+		$dbBill->init($this->userID,$this->pairUserID);
+	
+// 		 $dbBill->editTempBill($this->_param("mId"));
+		$this->isOk(-1,$dbBill->editTempBill($this->_param("mId")),"修改成功","User/message","修改错误，请重试","User/message");
+	}
+	
+	
+	
+	/*
+	 * 接受订单
+	 */
+	public function acceptMessage()
+	{
+		$dbBill = D("Bill");
+		$dbBill->init($this->userID,$this->pairUserID);
+		$pairId = $this->pairID;
+	
+		//$dbBill->acceptTempBill($this->_param("id"),$pairId);$this->display("add");
+		$this->isOk(-1,$dbBill->acceptTempBill($this->_param("id"),$pairId),"确认成功","User/message","确认错误，请重试","User/message");
 	}
 }

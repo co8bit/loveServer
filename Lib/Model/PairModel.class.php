@@ -85,10 +85,7 @@ class PairModel extends Model {
 		return $this->billContent;
 	}
 	
-	public function updateBillArray($isAdd,$billId,$changeMoney)//更新pair的账单id数组
-	/*
-	 * 参数是：isAdd=true说明是加分账单，一个billId
-	*/
+	public function updateBillArray($billId)//更新pair的账单id数组
 	{
 		$this->getOriginBillContent();
 	
@@ -100,10 +97,6 @@ class PairModel extends Model {
 		$data = NULL;
 		$data["pairId"] = $this->pairId;
 		$data["billContent"] = $this->billOrignContent;
-		if ($isAdd)
-			$data["money"] = $this->money + $changeMoney;
-		else
-			$data["money"] = $this->money - $changeMoney;
 		return $this->save($data);
 	}
 	

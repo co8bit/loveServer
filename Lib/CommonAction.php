@@ -43,5 +43,40 @@ Class CommonAction extends Action
 			$this->pairID = $re["pairId"];
 		}
 	}
+	
+	/**
+	 * 序列化一维数组，给数组添加自定义的中断标记并转换成字符串。
+	 * @param	array $data;需要转换的原始数据
+	 * 					string $tag;中断标记
+	 * @return	string;转换完成后的字符串
+	 * @note		最后一个元素末尾有中断标记
+	 */
+	public function serializeWithSlef($data,$tag)
+	{
+		$re = "";
+		foreach($data as $value)
+		{
+			$re .= $value.$tag;
+		}
+		return $re;
+	}
+	
+	/**
+	 * 序列化二维数组，给数组添加自定义的中断标记并转换成字符串。
+	 * @param	array $data;需要转换的原始数据
+	 * 					string $tag;中断标记
+	 * @return	string;转换完成后的字符串
+	 * @note		最后一个元素末尾有中断标记
+	 */
+	public function serializeTwoWithSlef($data,$tag)
+	{
+		$re = "";
+		foreach($data as $value)
+		{
+			foreach ($value as $valueIn)
+				$re .= $valueIn.$tag;
+		}
+		return $re;
+	}
 }
 ?>

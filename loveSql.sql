@@ -15,7 +15,7 @@ create table user(
 	password varchar(100) NOT NULL,
 	nickName varchar(100) NOT NULL,
 	score int NOT NULL,
-	pairId bigint NOT NULL,
+	pairID bigint NOT NULL,
 	
 	moodValue varchar(100),/*心情*/
 	primary key(uid)
@@ -34,9 +34,9 @@ create table bill(
 	scorePre int NOT NULL,
 	timeLast datetime NOT NULL,
 	timePre datetime NOT NULL,
-	isEditFromID bigint NOT NULL,
-	isEditToID bigint NOT NULL,
-	
+	isEditFromID bool NOT NULL,
+	isEditToID bool NOT NULL,
+	isOver bool NOT NULL,
 	primary key(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 

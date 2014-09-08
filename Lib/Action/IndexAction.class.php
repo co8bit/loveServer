@@ -6,110 +6,105 @@ class IndexAction extends CommonAction
 {
     public function index()
     {
-    	$this->assign('View_SOFTNAME',_SOFTNAME);
-    	$this->assign('View_VERSION',_VERSION);
-//     	echo CONF_PATH."MyConfigINI.php";
-    	
-    	$this->display();
+    	echo "这里是服务器端，你不应该访问这里的，你知道的太多了";
 	}
 	
-	private function isLogin()//判断是否已经登陆
+	/**
+	 * 为了登录设置session
+	 * @param		uid;
+	 * @param		name;用户名
+	 */
+	private function setSessionForLogin($uid,$name)
 	{
-		if (session('?userName'))//如果用户已经存在
-		{
-			redirect(U('User/index'),0);//不能写成$this->redirect(U('User/index'),0);不然地址会变成：http://项目名a/模块名b/操作c/项目名a/模块名b/操作c/..
-		}
+		//设置session
+		session('uid',uid);
+		session('userName',name);
 	}
 	
-	public function login()
+	/**
+	 * 登录函数
+	 * @method	get
+	 * @param	name;用户名
+	 * @param	password;密码
+	 * @return	登录成功；登录失败
+	 */
+	public function login()//判断登录是否成功
 	{
-		$this->isLogin();
-		$this->display();
-	}
-	
-	public function sign()
-	{
-		$this->isLogin();//无论isLogin()是不是private，调用的时候都要加$this->。？因为php不能像c++那样可以直接用，必须要指出是谁的
-		$this->display();
-	}
-	
-	public function toLogin()//判断登录是否成功
-	{
-		$dbuser = M("User");//NOTE:thinkphp是用参数名确定是哪个数据库的，比如M("User")的User
-    	$condition['userName'] = $this->_post('userName');
-    	$condition['userPassword'] = $this->_post('userPassword');
-    	$result = $dbuser->where($condition)->select();
+		$condition = null;
+    	$condition['name'] = $this->_get('name');
+    	$condition['password'] = $this->_get('password');
+    	$result = D("User")->where($condition)->find();
     	if($result)
     	{
-    		//设置session。session在toLogin和toSign中有设置
-    		session('_APPNAME',_SOFTNAME);
-    		session('userName',$result[0]['userName']);
-    		session('userPower',$result[0]['userPower']);
-    		session('userId',$result[0]['userId']);
-    		
-    		//$this->success('登陆成功','__APP__/User/index');
-    		$this->success('登陆成功',U('User/index'));//U方法用于完成对URL地址的组装，特点在于可以自动根据当前的URL模式和设置生成对应的URL地址
+    		$this->setSessionForLogin($result['uid'],$result['name']);
+    		echo '登录成功';
     	}
     	else
     	{
-    		$this->error('登录失败');
+    		echo "登录失败";
     	}
 	}
 	
-	public function toSign()//判断是否注册成功
+	/**
+	 *注册函数
+	 *@method	get
+	 *@param	name;用户名
+	 *@param	password；密码
+	 *@param	nickName;昵称
+	 *@return		用户名重复、注册失败、注册成功
+	 */
+	public function sign()
 	{
-		//$this->assign('waitSecond',135);
+		$data = null;
+		$data["name"] = $this->_get("name");
+		$data["password"] = $this->_get("password");
+		$data["nickName"] = $this->_get("nickName");
+		$data["score"] = 0;
+		$data["pairID"] = 0;
+		$data["moodValue"] = "未设置";
 		
-		$dbUser = D("User");
-		//trace($fields = $dbUser->getDbFields(),"my output:");     //for debug
-		$dbUser->create();
-		$userName = $dbUser->userName;
-		$userPowere = $dbUser->userPowere;
-		$dbUser->userPower = "00000000";
-		$dbUser->moodValue = "未设置";
-		$userId = $dbUser->add();
-		if(!$userId)//添加失败  TODO
+		if ( D("User")->where(array("name"=>$data["name"]))->find() )
 		{
-			if ( $dbUser->getError() == '非法数据对象！')//! 号后面有个空格
-				$this->error('注册失败：'.'有未填项');
-			else
-				$this->error('注册失败：'.$dbUser->getError());
+			exit("用户名重复");
+		}
+			
+		$userID = D("User")->add($data);
+		if(!$userID)
+		{
+			exit("注册失败");
 		}
 		else
 		{
-			session('_APPNAME',_SOFTNAME);
-			session('userName',$userName);//////////////////这里进行了session
-			session('userPower',$userPowere);
-			session('userId',$userId);
-			$this->success('注册成功',U('User/index'));//U函数必须要指定具体操作，不然会出错（即,不能U('User')）
+			$this->setSessionForLogin($userID,$data["name"]);
+			exit("注册成功");
 		}
 	}
 	
-	public function logout()//安全退出
+	/**
+	 *退出
+	 *@method	get
+	 *@return		非法登录、退出失败、退出成功
+	 */
+	public function logout()
 	{
 		//判断session是否存在
-		if (!session('?userName'))
+		if (!session('?uid'))
 		{
-			$this->error('非法登录',U('Index/login'));
+			exit("非法登录");
 		}
 	
 		//删除session
 		session('userName',null);
-		session('userPower',null);
-		session('_APPNAME',null);
-		session('userId',null);
-		session('moodValue',null);
-		session("toUserIndex",null);
+		session('uid',null);
 		
 		//再次判断session是否存在
-		if ( (session('?userName')) || (session('?userPower')) || (session('?userId')) )
-			$this->error('退出失败');
+		if ( (session('?userName')) || (session('?uid')) )
+		{
+			exit("退出失败");
+		}
 		else
-			$this->success('退出成功',U('Index/index'));////////////////////////////////////////////////////////
-	}
-	
-	public function help()
-	{
-		redirect(U('@www.co8bit.com'),0);
+		{
+			exit("退出成功");
+		}
 	}
 }

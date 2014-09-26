@@ -52,11 +52,17 @@ create table pair(
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 insert pair values(NULL,1,2,"2014-09-08 04:00:00");
 
-create table temppair(
+create table rule(
 	id bigint NOT NULL AUTO_INCREMENT,
-	userStartID bigint NOT NULL,
-	userEndID bigint NOT NULL,
-	remark varchar(100),
-	pairDate datetime,
+	fromID bigint NOT NULL,
+	idPair bigint NOT NULL,
+	title TEXT NOT NULL,
+	content TEXT NOT NULL,
+	scoreAdd int NOT NULL,
+	scoreSub int NOT NULL,
+	isEditFromID bool NOT NULL,
+	isEditToID bool NOT NULL,
+	isOver bool NOT NULL,
+	createTime datetime NOT NULL,
 	primary key(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;

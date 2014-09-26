@@ -27,6 +27,7 @@ create table bill(
 	id bigint NOT NULL AUTO_INCREMENT,
 	fromID bigint NOT NULL,
 	toID bigint NOT NULL,
+	isAdd bool NOT NULL,
 	title TEXT NOT NULL,
 	msgLast TEXT NOT NULL,
 	msgPre TEXT NOT NULL,
@@ -36,7 +37,8 @@ create table bill(
 	timePre datetime NOT NULL,
 	isEditFromID bool NOT NULL,
 	isEditToID bool NOT NULL,
-	isOver bool NOT NULL,
+	lastIsFrom bool NOT NULL,
+	isOver int NOT NULL,/*0:未完成；1：完成；3：完成但已经删掉*/
 	primary key(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 

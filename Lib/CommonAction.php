@@ -15,7 +15,7 @@ Class CommonAction extends Action
 	 * 登录后得到的pairID
 	 */
 	protected $pairID = null;
-	
+	/*
 	Public function _initialize()
 	{
 		//移动设备浏览，则切换模板
@@ -42,7 +42,7 @@ Class CommonAction extends Action
 			$this->pairUserID = $re["pairUserId"];
 			$this->pairID = $re["pairId"];
 		}
-	}
+	}*/
 	
 	/**
 	 * 序列化一维数组，给数组添加自定义的中断标记并转换成字符串。

@@ -26,22 +26,22 @@ class IndexAction extends CommonAction
 	 * @method	get
 	 * @param	name;用户名
 	 * @param	password;密码
-	 * @return	登录成功；登录失败
+	 * @return	登录成功true；登录失败false
 	 */
 	public function login()//判断登录是否成功
 	{
 		$condition = null;
-    	$condition['name'] = $this->_get('name');
-    	$condition['password'] = $this->_get('password');
+    	$condition['name'] = $this->_param('name');
+    	$condition['password'] = $this->_param('password');
     	$result = D("User")->where($condition)->find();
     	if($result)
     	{
     		$this->setSessionForLogin($result['uid'],$result['name']);
-    		echo '登录成功';
+    		echo 'true';
     	}
     	else
     	{
-    		echo "登录失败";
+    		echo "false";
     	}
 	}
 	
@@ -55,10 +55,11 @@ class IndexAction extends CommonAction
 	 */
 	public function sign()
 	{
+		header("Content-Type:text/html;charset=utf-8");
 		$data = null;
-		$data["name"] = $this->_get("name");
-		$data["password"] = $this->_get("password");
-		$data["nickName"] = $this->_get("nickName");
+		$data["name"] = $this->_param("name");
+		$data["password"] = $this->_param("password");
+		$data["nickName"] = $this->_param("nickName");
 		$data["score"] = 0;
 		$data["pairID"] = 0;
 		$data["moodValue"] = "未设置";
@@ -87,6 +88,7 @@ class IndexAction extends CommonAction
 	 */
 	public function logout()
 	{
+		header("Content-Type:text/html;charset=utf-8");
 		//判断session是否存在
 		if (!session('?uid'))
 		{

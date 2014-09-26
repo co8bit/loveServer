@@ -10,8 +10,15 @@ class UserModel extends Model {
 	{
 		$re = null;
 		$re	=	D("Bill")->where(array("id"=>$billID))->find();
-		$user = $this->where("id=".$re["toID"])->find();
-		$user["score"] += $re["scoreLast"];
+		$user = $this->where("uid=".$re["toID"])->find();
+		
+		if ( (($re["msgPre"] != "") || ($re["msgPre"] != null)) && ($re["scoreLast"] != $re["scorePre"]) )
+			return false;
+		
+		if ($ew["isAdd"])
+			$user["score"] += $re["scoreLast"];
+		else 
+			$user["score"] -= $re["scoreLast"];
 		$tmp = $this->save($user);
 		if ( ($tmp === null) || ($tmp === false) )
 			return false;

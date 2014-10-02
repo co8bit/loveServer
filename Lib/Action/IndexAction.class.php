@@ -22,12 +22,13 @@ class IndexAction extends CommonAction
 		session('userName',name);
 	}
 	
+	
 	/**
 	 * 登录函数
-	 * @method	get
+	 * @method	param
 	 * @param	name;用户名
 	 * @param	password;密码
-	 * @return	登录成功true；登录失败false
+	 * @return	登录成功返回序列化后的(自己id，自己昵称，对方id，对方昵称)；登录失败false
 	 */
 	public function login()//判断登录是否成功
 	{
@@ -38,7 +39,18 @@ class IndexAction extends CommonAction
     	if($result)
     	{
     		$this->setSessionForLogin($result['uid'],$result['name']);
-    		echo 'true';
+
+    		$tmp = null;
+    		$partnerID	=	$this->getPartnerID($result["uid"]);
+    		$tmp = D("User")->where(array("uid"=>$partnerID))->find();
+    		
+    		$re = null;
+    		$re["uid"]		=	$result["uid"];
+    		$re["nickName"]	=	$result["nickName"];
+    		$re["partnerID"]=	$tmp["uid"];
+    		$re["partnerNickName"]	=	$tmp["nickName"];
+    		
+    		echo $this->serializeWithSlef($re,_SPECAL_BREAK_FLAG);
     	}
     	else
     	{
@@ -48,7 +60,7 @@ class IndexAction extends CommonAction
 	
 	/**
 	 *注册函数
-	 *@method	get
+	 *@method	param
 	 *@param	name;用户名
 	 *@param	password；密码
 	 *@param	nickName;昵称
@@ -84,8 +96,8 @@ class IndexAction extends CommonAction
 	
 	/**
 	 *退出
-	 *@method	get
-	 *@return		非法登录、退出失败、退出成功
+	 *@method	param
+	 *@return	非法登录、退出失败、退出成功
 	 */
 	public function logout()
 	{

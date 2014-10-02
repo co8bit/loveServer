@@ -152,52 +152,52 @@ class BillAction extends CommonAction
 		}
 	}
 	
-	/**
-	 * 查询一个订单
-	 * @method get
-	 * @param	id;账单id
-	 * @return	一个订单，或者false
-	 */
-	public function queryOne()
-	{
-		header("Content-Type:text/html;charset=utf-8");
-		$billID = $this->_param("id");
-		$re = null;
-		$re	=	D("Bill")->where(array("id"=>$billID))->find();
-		if ($re["isAdd"])
-			$re["isAdd"] = "+";
-		else
-			$re["isAdd"] = "-";
-		if ($re !== false)
-			echo '1'._SPECAL_BREAK_FLAG.$this->serializeWithSlef($re,_SPECAL_BREAK_FLAG);
-		else
-			echo "false";
-	}
+// 	/**
+// 	 * 查询一个订单
+// 	 * @method get
+// 	 * @param	id;账单id
+// 	 * @return	一个订单，或者false
+// 	 */
+// 	public function queryOne()
+// 	{
+// 		header("Content-Type:text/html;charset=utf-8");
+// 		$billID = $this->_param("id");
+// 		$re = null;
+// 		$re	=	D("Bill")->where(array("id"=>$billID))->find();
+// 		if ($re["isAdd"])
+// 			$re["isAdd"] = "+";
+// 		else
+// 			$re["isAdd"] = "-";
+// 		if ($re !== false)
+// 			echo '1'._SPECAL_BREAK_FLAG.$this->serializeWithSlef($re,_SPECAL_BREAK_FLAG);
+// 		else
+// 			echo "false";
+// 	}
 	
-	/**
-	 * 查询该用户的所有订单（包括已完结的订单）
-	 * @method get
-	 * @param	uid
-	 * @return	多个订单，或者false
-	 */
-	public function queryAll()
-	{
-		header("Content-Type:text/html;charset=utf-8");
-		$uid = $this->_param("uid");
-		$re = null;
-		$re	=	D("Bill")->where("fromID=".$uid." or toID=".$uid)->order("timeLast desc")->select();
-		foreach ($re as $key=>$value)
-		{
-			if ($re[$key]["isAdd"])
-				$re[$key]["isAdd"] = "+";
-			else
-				$re[$key]["isAdd"] = "-";
-		}
-		if ($re !== false)
-			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
-		else
-			echo "false";
-	}
+// 	/**
+// 	 * 查询该用户的所有订单（包括已完结的订单）
+// 	 * @method get
+// 	 * @param	uid
+// 	 * @return	多个订单，或者false
+// 	 */
+// 	public function queryAll()
+// 	{
+// 		header("Content-Type:text/html;charset=utf-8");
+// 		$uid = $this->_param("uid");
+// 		$re = null;
+// 		$re	=	D("Bill")->where("fromID=".$uid." or toID=".$uid)->order("timeLast desc")->select();
+// 		foreach ($re as $key=>$value)
+// 		{
+// 			if ($re[$key]["isAdd"])
+// 				$re[$key]["isAdd"] = "+";
+// 			else
+// 				$re[$key]["isAdd"] = "-";
+// 		}
+// 		if ($re !== false)
+// 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+// 		else
+// 			echo "false";
+// 	}
 	
 	/**
 	 * 查询该用户的未完成订单
@@ -209,8 +209,10 @@ class BillAction extends CommonAction
 	{
 		header("Content-Type:text/html;charset=utf-8");
 		$uid = $this->_param("uid");
+		$partnerID	=	$this->getPartnerID($uid);
+		
 		$re = null;
-		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid.")and isOver=0")->order("timeLast desc")->select();
+		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=0")->order("timeLast desc")->select();
 		foreach ($re as $key=>$value)
 		{
 			if ($re[$key]["isAdd"])
@@ -234,8 +236,10 @@ class BillAction extends CommonAction
 	{
 		header("Content-Type:text/html;charset=utf-8");
 		$uid = $this->_param("uid");
+		$partnerID	=	$this->getPartnerID($uid);
+		
 		$re = null;
-		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid.")and isOver=1")->order("timeLast desc")->select();
+		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=1")->order("timeLast desc")->select();
 		foreach ($re as $key=>$value)
 		{
 			if ($re[$key]["isAdd"])

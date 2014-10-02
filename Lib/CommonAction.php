@@ -78,5 +78,28 @@ Class CommonAction extends Action
 		}
 		return $re;
 	}
+	
+	/**
+	 * 得到对方ID
+	 * @param $uid;用户id
+	 * @return 对方ID或者错误;
+	 */
+	protected  function getPartnerID($uid)
+	{
+		$tmp = null;
+		$tmp = D("Pair")->where(array("user1ID"=>$uid))->find();
+		if ($tmp)
+			return $tmp["user2ID"];
+		else
+		{
+			$tmp = D("Pair")->where(array("user2ID"=>$uid))->find();
+			if ($tmp)
+			{
+				return $tmp["user1ID"];
+			}
+			else
+				return false;
+		}
+	}
 }
 ?>

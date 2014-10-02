@@ -18,8 +18,8 @@ class RuleAction extends CommonAction
 		$data["content"]	=		$this->_param("content");
 		$data["scoreAdd"]	=		$this->_param("scoreAdd");
 		$data["scoreSub"]	=		$this->_param("scoreSub");
-		$data["isEditFromID"] =		1;
-		$data["isEditToID"]	=	 	0;
+		$data["isUnreadFromID"] =		1;
+		$data["isUnreadToID"]	=	 	1;
 		$data["isOver"]		=		0;
 		$data["createTime"] =		date("Y-m-d H:i:s");
 		
@@ -48,22 +48,11 @@ class RuleAction extends CommonAction
 		$data["content"]	=		$this->_param("content");
 		$data["scoreAdd"]	=		$this->_param("scoreAdd");
 		$data["scoreSub"]	=		$this->_param("scoreSub");
+		$data["isUnreadFromID"] =		1;
+		$data["isUnreadToID"]	=	 	1;
 		$data["createTime"] =		date("Y-m-d H:i:s");
 		
 		$re	=	null;
-		$re = D("Rule")->where(array("id"=>$data["id"]))->find();
-		
-		if ($data["uid"] == $re["fromID"])
-		{
-			$data["isEditFromID"] =		1;
-			$data["isEditToID"]	=	 	0;
-		}
-		else
-		{
-			$data["isEditFromID"] =		0;
-			$data["isEditToID"]	=	 	1;
-		}
-		
 		$re = D("Rule")->save($data);
 		if ( ($re === null) || ($re === false) )
 			exit("false");
@@ -72,7 +61,7 @@ class RuleAction extends CommonAction
 	}
 	
 	/**
-	 * 提交规则已读，即更新订单的isEditFromID等
+	 * 提交规则已读，即更新订单的isUnreadFromID等
 	 * @param	id;ruleID
 	 * @return	bool;是否成功；成功返回true，失败返回false
 	 */
@@ -87,11 +76,11 @@ class RuleAction extends CommonAction
 		$data["id"] = $id;
 		if ( $re["fromID"]  == $uid )
 		{
-			$data["isEditFromID"] = 0;
+			$data["isUnreadFromID"] = 0;
 		}
 		else
 		{
-			$data["isEditToID"]	=	0;
+			$data["isUnreadToID"]	=	0;
 		}
 		
 		$tmp = D("Rule")->save($data);
@@ -110,7 +99,7 @@ class RuleAction extends CommonAction
 	public function accept()
 	{
 		$idRule	=		$this->_param("id");
-		if ( D("Rule")->save(array("id"=>$idRule,"isOver"=>1,"isEditFromID"=>1,"isEditToID"=>1)) )
+		if ( D("Rule")->save(array("id"=>$idRule,"isOver"=>1,"isUnreadFromID"=>1,"isUnreadToID"=>1)) )
 		{
 			echo "true";
 		}
@@ -158,8 +147,8 @@ class RuleAction extends CommonAction
 		$idPair		=	$tmp["pairID"];
 		
 		$re = null;
-		$re	=	D("Rule")->where("pairID=".$idPair." and isOver=0")->order("timeLast desc")->select();
-		if ($re)
+		$re	=	D("Rule")->where("pairID=".$idPair." and isOver=0")->order("createTime desc")->select();
+		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";
@@ -180,8 +169,8 @@ class RuleAction extends CommonAction
 		$idPair		=	$tmp["pairID"];
 		
 		$re = null;
-		$re	=	D("Rule")->where("pairID=".$idPair." and isOver=1")->order("timeLast desc")->select();
-		if ($re)
+		$re	=	D("Rule")->where("pairID=".$idPair." and isOver=1")->order("createTime desc")->select();
+		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";

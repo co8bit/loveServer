@@ -168,7 +168,7 @@ class BillAction extends CommonAction
 			$re["isAdd"] = "+";
 		else
 			$re["isAdd"] = "-";
-		if ($re)
+		if ($re !== false)
 			echo '1'._SPECAL_BREAK_FLAG.$this->serializeWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";
@@ -193,7 +193,7 @@ class BillAction extends CommonAction
 			else
 				$re[$key]["isAdd"] = "-";
 		}
-		if ($re)
+		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";
@@ -218,7 +218,7 @@ class BillAction extends CommonAction
 			else
 				$re[$key]["isAdd"] = "-";
 		}
-		if ($re)
+		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";
@@ -243,7 +243,7 @@ class BillAction extends CommonAction
 			else
 				$re[$key]["isAdd"] = "-";
 		}
-		if ($re)
+		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else
 			echo "false";

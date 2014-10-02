@@ -6,6 +6,7 @@ class IndexAction extends CommonAction
 {
     public function index()
     {
+    	header("Content-Type:text/html;charset=utf-8");
     	echo "这里是服务器端，你不应该访问这里的，你知道的太多了";
 	}
 	

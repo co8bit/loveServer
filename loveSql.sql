@@ -55,14 +55,14 @@ insert pair values(NULL,1,2,"2014-09-08 04:00:00");
 create table rule(
 	id bigint NOT NULL AUTO_INCREMENT,
 	fromID bigint NOT NULL,
-	idPair bigint NOT NULL,
+	pairID bigint NOT NULL,
 	title TEXT NOT NULL,
 	content TEXT NOT NULL,
 	scoreAdd int NOT NULL,
 	scoreSub int NOT NULL,
-	isEditFromID bool NOT NULL,
-	isEditToID bool NOT NULL,
-	isOver bool NOT NULL,
+	isUnreadFromID bool NOT NULL,
+	isUnreadToID bool NOT NULL,
+	isOver bool NOT NULL,/*0:未完成；1：完成；3：完成但已经删掉*/
 	createTime datetime NOT NULL,
 	primary key(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;

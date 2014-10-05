@@ -51,7 +51,7 @@ Class CommonAction extends Action
 	 * @return	string;转换完成后的字符串
 	 * @note		最后一个元素末尾有中断标记
 	 */
-	public function serializeWithSlef($data,$tag)
+	public function serializeWithSlef($data,$tag = _SPECAL_BREAK_FLAG)
 	{
 		$re = "";
 		foreach($data as $value)
@@ -68,7 +68,7 @@ Class CommonAction extends Action
 	 * @return	string;转换完成后的字符串
 	 * @note		最后一个元素末尾有中断标记
 	 */
-	public function serializeTwoWithSlef($data,$tag)
+	public function serializeTwoWithSlef($data,$tag = _SPECAL_BREAK_FLAG)
 	{
 		$re = "";
 		foreach($data as $value)
@@ -100,6 +100,27 @@ Class CommonAction extends Action
 			else
 				return false;
 		}
+	}
+	
+	/**
+	 * 把字符串按照分隔符分开成数组，要求字符串结尾处要有分隔符
+	 * @param	$tmp;要分割的字符串
+	 * @return	array[i] = 内容
+	 */
+	protected function stringToArray($tmp)
+	{
+		$re		=		null;
+		
+// 		if ( ($tmp == "") || ($tmp == null) )//如果该用户还没有初始化卡片列表，则初始化
+// 		{
+// 			for ($i = 0; $i < _CARD_NUM; $i++)
+// 				$tmp .= "0"._SPECAL_BREAK_FLAG;
+// 		}
+	
+		$re	= explode(_SPECAL_BREAK_FLAG,$tmp);
+		array_pop($re);//弹掉最后一个空的项（因为输入末尾带一个多余的分隔符）
+		
+		return	$re;
 	}
 }
 ?>

@@ -17,11 +17,16 @@ create table user(
 	score int NOT NULL,
 	pairID bigint NOT NULL,
 	
+	cardOwn text NOT NULL,/*拥有卡片，卡片需要给别人后别人使用；卡片种类共有_CARD_NUM种（在config中定义）*/
+	cardAble text NOT NULL,/*可用卡片*/
+	money int NOT NULL,/*钻石数量*/
+	point int NOT NULL,/*积分数量*/
+	
 	moodValue varchar(100),/*心情*/
 	primary key(uid)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
-insert user values(NULL,"wbx","wbx","co8bit",0,1,"未设置");
-insert user values(NULL,"lxz","lxz","zhuzhu",0,1,"未设置");
+insert user values(NULL,"wbx","wbx","co8bit",0,1,"","",0,0,"未设置");/*没有设置cardOwn和cardAble*/
+insert user values(NULL,"lxz","lxz","zhuzhu",0,1,"","",0,0,"未设置");/*没有设置cardOwn和cardAble*/
 
 create table bill(
 	id bigint NOT NULL AUTO_INCREMENT,

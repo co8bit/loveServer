@@ -2,6 +2,8 @@
 include(CONF_PATH."MyConfigINI.php");
 include(LIB_PATH."CommonAction.php");
 
+
+//////////////////////////////////////////////////////////////////////////这个类没有用
 class UserAction extends CommonAction
 {
 	
@@ -176,92 +178,4 @@ class UserAction extends CommonAction
 	}
 	
 	
-	/**
-	 * 显示新消息
-	 */
-	public function message()
-	{
-		$dbUser = D("User");
-		$dbUser->init($this->userID);
-		$billIdList = $dbUser->getBillContent();
-		
-		$dbBill = D("Bill");
-		$data = $dbBill->getBillInfo($billIdList);
-	
-		$count = count($data);
-		for ($i = 0; $i < $count; $i++)
-		{
-			if ($data[$i]["isAdd"] == true)
-			{
-				$output[$i]["isAdd"] = "1";
-			}
-			else
-			{
-				$output[$i]["isAdd"] = "0";
-			}
-			$output[$i]["remark"] = $data[$i]["remark"];
-			$output[$i]["mId"] = $data[$i]["billId"];
-			$output[$i]["userStartID"] = $data[$i]["userStartID"];
-			$output[$i]["sMsg"] = $data[$i]["sMsg"];
-			$output[$i]["eMsg"] = $data[$i]["eMsg"];
-			$output[$i]["sMoney"] = $data[$i]["sMoney"];
-			$output[$i]["eMoney"] = $data[$i]["eMoney"];
-			$output[$i]["sTime"] = $data[$i]["sTime"];
-			$output[$i]["eTime"] = $data[$i]["eTime"];
-			$output[$i]["toUser"] = $data[$i]["toUser"];
-		}
-	
-		header("Content-type: text/html; charset=utf-8");
-// 		dump($output);
-		echo xuLieHua_2($output);
-	}
-
-	
-	
-	public function toAdd()//与toSub对称
-	{
-		$dbBill = D("Bill");
-		$dbBill->init($this->userID,$this->pairUserID,true);
-		
-		// 		$dbBill->insertTempBill();
-		$this->isOk(-1,$dbBill->insertTempBill(),"转账申请成功，等待对方确认","User/index","转账错误，请重试","User/add");
-	}
-	
-	
-	
-	public function toSub()//与toAdd对称
-	{
-		$dbBill = D("Bill");
-		$dbBill->init($this->userID,$this->pairUserID,false);
-	
-		$this->isOk(-1,$dbBill->insertTempBill(),"扣除申请成功，等待对方确认","User/index","转账错误，请重试","User/sub");
-	}
-	
-	
-	/**
-	 * 修改订单页面
-	 */
-	public function editMessage()
-	{
-		$dbBill = D("Bill");
-		$dbBill->init($this->userID,$this->pairUserID);
-	
-// 		 $dbBill->editTempBill($this->_param("mId"));
-		$this->isOk(-1,$dbBill->editTempBill($this->_param("mId")),"修改成功","User/message","修改错误，请重试","User/message");
-	}
-	
-	
-	
-	/*
-	 * 接受订单
-	 */
-	public function acceptMessage()
-	{
-		$dbBill = D("Bill");
-		$dbBill->init($this->userID,$this->pairUserID);
-		$pairId = $this->pairID;
-	
-		//$dbBill->acceptTempBill($this->_param("id"),$pairId);$this->display("add");
-		$this->isOk(-1,$dbBill->acceptTempBill($this->_param("id"),$pairId),"确认成功","User/message","确认错误，请重试","User/message");
-	}
 }

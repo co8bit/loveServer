@@ -69,12 +69,17 @@ class IndexAction extends CommonAction
 	public function sign()
 	{
 		header("Content-Type:text/html;charset=utf-8");
+		//准备注册内容
 		$data = null;
 		$data["name"] = $this->_param("name");
 		$data["password"] = $this->_param("password");
 		$data["nickName"] = $this->_param("nickName");
 		$data["score"] = 0;
 		$data["pairID"] = 0;
+		for ($i = 0; $i < _CARD_NUM; $i++)
+			$tmp .= "0"._SPECAL_BREAK_FLAG;
+		$data["cardOwn"]	=	$tmp;
+		$data["cardAble"]	=	$tmp;
 		$data["moodValue"] = "未设置";
 		
 		if ( D("User")->where(array("name"=>$data["name"]))->find() )

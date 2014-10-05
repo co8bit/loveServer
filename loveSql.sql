@@ -14,13 +14,13 @@ create table user(
 	name varchar(100) NOT NULL,/*TODO：主键或者唯一*/
 	password varchar(100) NOT NULL,
 	nickName varchar(100) NOT NULL,
-	score int NOT NULL,
+	score int NOT NULL,/*账户得分（订单增减的那个）*/
 	pairID bigint NOT NULL,
 	
 	cardOwn text NOT NULL,/*拥有卡片，卡片需要给别人后别人使用；卡片种类共有_CARD_NUM种（在config中定义）*/
 	cardAble text NOT NULL,/*可用卡片*/
 	money int NOT NULL,/*钻石数量*/
-	point int NOT NULL,/*积分数量*/
+	point int NOT NULL,/*积分数量,在商店买卡片时用的积分*/
 	
 	moodValue varchar(100),/*心情*/
 	primary key(uid)
@@ -69,5 +69,18 @@ create table rule(
 	isUnreadToID bool NOT NULL,
 	isOver bool NOT NULL,/*0:未完成；1：完成；3：完成但已经删掉*/
 	pairID bigint NOT NULL,
+	primary key(id)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+create table task(
+	id bigint NOT NULL AUTO_INCREMENT,
+	fromID bigint NOT NULL,
+	title TEXT NOT NULL,
+	content TEXT NOT NULL,
+	score int NOT NULL,
+	createTime datetime NOT NULL,
+	state int NOT NULL,/*0表示发起状态，1表示对方接受任务，2表示发起人确认任务，即任务完成。3表示删除*/
+	isUnreadFromID bool NOT NULL,
+	isUnreadToID bool NOT NULL,
 	primary key(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;

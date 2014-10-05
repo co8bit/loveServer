@@ -24,10 +24,6 @@ class TaskAction extends CommonAction
 		$data["createTime"] =		date("Y-m-d H:i:s");
 		
 		//TODO:数据库事务
-		$re = D("Task")->add($data);
-		if ( ($re === null) || ($re === false) )
-			exit("false");
-		
 		$fromUser		=	null;
 		$fromUser		=	D("User")->where(array("uid"=>$data["fromID"]))->find();
 		if ($fromUser["score"] - $data["score"] < 0)
@@ -35,6 +31,10 @@ class TaskAction extends CommonAction
 		if ($data["score"] <= 0)
 			exit("error");
 		$fromUser["score"] -= $data["score"];
+		
+		$re = D("Task")->add($data);
+		if ( ($re === null) || ($re === false) )
+			exit("false");
 		
 		if ( D("User")->save($fromUser) )
 			echo $re;
@@ -61,6 +61,8 @@ class TaskAction extends CommonAction
 			exit("false");
 		if ($tmp["fromID"] == $uid)
 			exit("error");
+		if ($tmp["state"] != 0)
+			exit("error");
 		
 		//修改
 		if ( D("Task")->save(array("id"=>$id,"state"=>1,"isUnreadFromID"=>1,"isUnreadToID"=>1)) )
@@ -78,7 +80,7 @@ class TaskAction extends CommonAction
 	 * 要执行该操作的uid只能是fromid
 	 * @method	param
 	 * @param	id：规则id；uid：操作人uid
-	 * @return	成功返回true，失败返回false;操作人非法返回error
+	 * @return	成功返回true，失败返回false;操作人非法、状态非法返回error
 	 */
 	public function over()
 	{
@@ -91,6 +93,8 @@ class TaskAction extends CommonAction
 		if ( ($tmp === null) || ($tmp === false) )
 			exit("false");
 		if ($tmp["fromID"] != $uid)
+			exit("error");
+		if ($tmp["state"] != 1)
 			exit("error");
 
 		//TODO:数据库事务
@@ -117,7 +121,7 @@ class TaskAction extends CommonAction
 	 * 状态为0时，要执行该操作uid要求只能是fromid
 	 * 状态为1时，要执行该操作uid要求只能是toid
 	 * @param	id：规则id；uid：操作人uid
-	 * @return	成功返回true，失败返回false;操作人非法返回error
+	 * @return	成功返回true，失败返回false;操作人非法、订单已完成返回error
 	 */
 	public function delete()
 	{
@@ -131,13 +135,15 @@ class TaskAction extends CommonAction
 			exit("false");
 		if ( ($tmp["state"] == 0) && ($tmp["fromID"] != $uid) )
 			exit("error");
-		if ( ($tmp["state"] == 1) && ($this->getPartnerID($uid) != $uid) )
+		if ( ($tmp["state"] == 1) && ($this->getPartnerID($tmp["fromID"]) != $uid) )
+			exit("error");
+		if ($tmp["state"] == 2)
 			exit("error");
 		
 		//TODO:数据库事务
 		//修改
 		$fromUser		=	null;
-		$fromUser		=	D("User")->where(array("uid"=>$data["fromID"]))->find();
+		$fromUser		=	D("User")->where(array("uid"=>$tmp["fromID"]))->find();
 		$fromUser["score"] += $tmp["score"];
 		
 		if ( D("Task")->save(array("id"=>$id,"state"=>3,"isUnreadFromID"=>0,"isUnreadToID"=>0)) 
@@ -150,6 +156,7 @@ class TaskAction extends CommonAction
 		{
 			echo "false";
 		}
+// 		$this->display("Private:debug");
 	}
 	
 	
@@ -196,7 +203,7 @@ class TaskAction extends CommonAction
 		$uid = $this->_param("uid");
 		
 		$re = 	null;
-		$re	=	D("Rule")->where("(fromID=".$uid." or fromID=".$this->getPartnerID($uid).") and (state=0 or state=1)")->order("createTime desc")->select();
+		$re	=	D("Task")->where("(fromID=".$uid." or fromID=".$this->getPartnerID($uid).") and (state=0 or state=1)")->order("createTime desc")->select();
 		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
 		else

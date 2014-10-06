@@ -151,27 +151,35 @@ class RuleAction extends CommonAction
 	/**
 	 * 查询该用户的未完成规则
 	 * @method param
-	 * @param	uid
+	 * @param	uid；page：当前页数，从1开始计数
 	 * @return	多个订单，或者false
 	 */
 	public function query()
 	{
 		header("Content-Type:text/html;charset=utf-8");
-		$uid = $this->_param("uid");
+		$uid 	= $this->_param("uid");
+		$page	=	$this->_param("page");
 		$tmp	=	null;
 		$tmp = D("User")->where(array("uid"=>$uid))->find();
 		$pairID		=	$tmp["pairID"];
 		
 		$re = null;
-		$re	=	D("Rule")->where("pairID=".$pairID." and isOver=0")->order("createTime desc")->select();
+		$totalNum	=	D("Rule")->where("pairID=".$pairID." and isOver=0")->order("createTime desc")->count();
+		$totalPageNum	=	ceil($totalNum / _PAGE_CONTENT_NUM);
+		$re		=	D("Rule")->where("pairID=".$pairID." and isOver=0")->order("createTime desc")->page($page,_PAGE_CONTENT_NUM)->select();
 		if ($re !== false)
-			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		{
+			if ($page < $totalPageNum)
+				echo (_PAGE_CONTENT_NUM + 1)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+			else
+				echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		}
 		else
 			echo "false";
 	}
 	
 	/**
-	 * 查询该用户的已完结的规则
+	 * 查询该用户的已完结的规则，不支持分页
 	 * @method param
 	 * @param	uid
 	 * @return	多个订单，或者false
@@ -188,6 +196,36 @@ class RuleAction extends CommonAction
 		$re	=	D("Rule")->where("pairID=".$pairID." and isOver=1")->order("createTime desc")->select();
 		if ($re !== false)
 			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		else
+			echo "false";
+	}
+	
+	/**
+	 * 查询该用户的已完结的规则，支持分页
+	 * @method param
+	 * @param	uid；page：当前页数，从1开始计数
+	 * @return	多个订单，或者false
+	 */
+	public function queryOverPage()
+	{
+		header("Content-Type:text/html;charset=utf-8");
+		$uid 	= $this->_param("uid");
+		$page	=	$this->_param("page");
+		$tmp	=	null;
+		$tmp = D("User")->where(array("uid"=>$uid))->find();
+		$pairID		=	$tmp["pairID"];
+	
+		$re = null;
+		$totalNum	=	D("Rule")->where("pairID=".$pairID." and isOver=1")->order("createTime desc")->count();
+		$totalPageNum	=	ceil($totalNum / _PAGE_CONTENT_NUM);
+		$re	=	D("Rule")->where("pairID=".$pairID." and isOver=1")->order("createTime desc")->page($page,_PAGE_CONTENT_NUM)->select();
+		if ($re !== false)
+		{
+			if ($page < $totalPageNum)
+				echo (_PAGE_CONTENT_NUM + 1)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+			else
+				echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		}
 		else
 			echo "false";
 	}

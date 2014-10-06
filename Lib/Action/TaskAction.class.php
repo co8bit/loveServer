@@ -194,18 +194,26 @@ class TaskAction extends CommonAction
 	/**
 	 * 查询该用户的任务（状态为0、1的）
 	 * @method param
-	 * @param	uid
+	 * @param	uid;page：当前页数，从1开始计数
 	 * @return	多个订单，或者false
 	 */
 	public function query()
 	{
 		header("Content-Type:text/html;charset=utf-8");
-		$uid = $this->_param("uid");
+		$uid 	= 	$this->_param("uid");
+		$page	=	$this->_param("page");
 		
 		$re = 	null;
-		$re	=	D("Task")->where("(fromID=".$uid." or fromID=".$this->getPartnerID($uid).") and (state=0 or state=1)")->order("createTime desc")->select();
+		$totalNum	=	D("Task")->where("(fromID=".$uid." or fromID=".$this->getPartnerID($uid).") and (state=0 or state=1)")->order("createTime desc")->count();
+		$totalPageNum	=	ceil($totalNum / _PAGE_CONTENT_NUM);
+		$re	=	D("Task")->where("(fromID=".$uid." or fromID=".$this->getPartnerID($uid).") and (state=0 or state=1)")->order("createTime desc")->page($page,_PAGE_CONTENT_NUM)->select();
 		if ($re !== false)
-			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		{
+			if ($page < $totalPageNum)
+				echo (_PAGE_CONTENT_NUM + 1)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+			else
+				echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		}
 		else
 			echo "false";
 	}

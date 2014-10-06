@@ -202,17 +202,20 @@ class BillAction extends CommonAction
 	/**
 	 * 查询该用户的未完成订单
 	 * @method get
-	 * @param	uid
+	 * @param	uid;page：当前页数，从1开始计数
 	 * @return	多个订单，或者false
 	 */
 	public function query()
 	{
 		header("Content-Type:text/html;charset=utf-8");
-		$uid = $this->_param("uid");
+		$uid 		= 	$this->_param("uid");
+		$page		=	$this->_param("page");
 		$partnerID	=	$this->getPartnerID($uid);
 		
 		$re = null;
-		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=0")->order("timeLast desc")->select();
+		$totalNum	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=0")->order("timeLast desc")->count();
+		$totalPageNum	=	ceil($totalNum / _PAGE_CONTENT_NUM);
+		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=0")->order("timeLast desc")->page($page,_PAGE_CONTENT_NUM)->select();
 		foreach ($re as $key=>$value)
 		{
 			if ($re[$key]["isAdd"])
@@ -221,7 +224,12 @@ class BillAction extends CommonAction
 				$re[$key]["isAdd"] = "-";
 		}
 		if ($re !== false)
-			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		{
+			if ($page < $totalPageNum)
+				echo (_PAGE_CONTENT_NUM + 1)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+			else
+				echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		}
 		else
 			echo "false";
 	}
@@ -229,17 +237,20 @@ class BillAction extends CommonAction
 	/**
 	 * 查询该用户的已完结的订单
 	 * @method param
-	 * @param	uid
+	 * @param	uid；page：当前页数，从1开始计数
 	 * @return	多个订单，或者false
 	 */
 	public function queryOver()
 	{
 		header("Content-Type:text/html;charset=utf-8");
-		$uid = $this->_param("uid");
+		$uid 		= 	$this->_param("uid");
+		$page		=	$this->_param("page");
 		$partnerID	=	$this->getPartnerID($uid);
 		
 		$re = null;
-		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=1")->order("timeLast desc")->select();
+		$totalNum	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=1")->order("timeLast desc")->count();
+		$totalPageNum	=	ceil($totalNum / _PAGE_CONTENT_NUM);
+		$re	=	D("Bill")->where("(fromID=".$uid." or toID=".$uid." or fromID=".$partnerID." or toID=".$partnerID.")and isOver=1")->order("timeLast desc")->page($page,_PAGE_CONTENT_NUM)->select();
 		foreach ($re as $key=>$value)
 		{
 			if ($re[$key]["isAdd"])
@@ -248,7 +259,12 @@ class BillAction extends CommonAction
 				$re[$key]["isAdd"] = "-";
 		}
 		if ($re !== false)
-			echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		{
+			if ($page < $totalPageNum)
+				echo (_PAGE_CONTENT_NUM + 1)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+			else
+				echo count($re)._SPECAL_BREAK_FLAG.$this->serializeTwoWithSlef($re,_SPECAL_BREAK_FLAG);
+		}
 		else
 			echo "false";
 	}
